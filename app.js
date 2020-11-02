@@ -67,7 +67,7 @@ function internCreation() {
         type: "input",
         message: "What is the Intern's ID Number?",
         name: "id",
-        default: "Manager's ID Number"
+        default: "Intern's ID Number"
     },
     {
         type: "input",
