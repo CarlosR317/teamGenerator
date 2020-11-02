@@ -1,3 +1,5 @@
+const employees = [];
+
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
@@ -11,16 +13,166 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-inquirer.prompt([
+// This is for the manager's inquirer prompts
+function managerCreation() {
+
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the name of the Team's Manager?",
+            name: "name",
+            default: "Manager's Name"
+        },
+
+        {
+            type: "input",
+            message: "What is the Team's Manager ID Number?",
+            name: "id",
+            default: "Manager's ID Number"
+        },
+        {
+            type: "input",
+            message: "What is the Team's Manager E-mail address?",
+            name: "email",
+            default: "manager@email.com"
+        },
+        {
+            type: "input",
+            message: "What is the Team's Manager Office Number?",
+            name: "officeNumber",
+            default: "Manager's Office Number"
+        }
+    ])
+
+        .then((managerResponses) => {
+            let manager = new Manager(managerResponses.name, managerResponses.id, managerResponses.email, managerResponses.officeNumber);
+
+            employees.push(manager);
+
+            employeeCreation();
+        })
+}
+// This is for the Intern's inquirer prompts
+
+function internCreation() {
+
+    inquirer.prompt([{
+
+        type: "input",
+        message: "What is the name of the Intern?",
+        name: "name",
+        default: "Intern's Name"
+    },
     {
-// questions about manager
-}])
-.then (function(managerAnswers){
-    const manager = new Manager(managerAnswers.name.id.email.officeNumber);
-})
+        type: "input",
+        message: "What is the Intern's ID Number?",
+        name: "id",
+        default: "Manager's ID Number"
+    },
+    {
+        type: "input",
+        message: "What is the Intern's E-mail?",
+        name: "email",
+        default: "intern@email.com"
+    },
+    {
+        type: "input",
+        message: "What is the name of the School the Intern is attending?",
+        name: "school",
+        default: "intern's School"
+    }
+    ])
+    .then((internResponses) => {
+        let intern = new Intern(internResponses.name, internResponses.id, internResponses.email, internResponses.school);
+
+            employees.push(intern);
+
+            employeeCreation();
+    })
+}
+
+//This is for the engineer inquirer prompts
+function engineerCreation() {
+
+    inquirer.prompt([{
+
+        type: "input",
+        message: "What is the name of the Engineer?",
+        name: "name",
+        default: "Engineer's Name"
+    },
+    {
+        type: "input",
+        message: "What is the Engineer's ID Number?",
+        name: "id",
+        default: "Engineer's ID Number"
+    },
+    {
+        type: "input",
+        message: "What is the Engineer's E-mail?",
+        name: "email",
+        default: "Engineer@email.com"
+    },
+    {
+        type: "input",
+        message: "What is the name of the Engineer's Github account?",
+        name: "github",
+        default: "Engineer's Github account"
+    }
+    ])
+    .then((engineerResponses) => {
+        let engineer = new Engineer(engineerResponses.name, engineerResponses.id, engineerResponses.email, engineerResponses.school);
+
+            employees.push(engineer);
+
+            employeeCreation();
+    })
+}
+
+managerCreation()
+
+// gives the ability to add need employees
+function employeeCreation() {
     
+    inquirer.prompt([
+
+        {
+            type: "list",
+            message: "Please select the type of Employee you wish to create.",
+            name: "employeeSelection",
+            choices: [
+                "Engineer",
+                "Intern",
+                "No More Employees to add."
+            ]
+        }
+    ])
+
+        .then((selectionType) => {
+
+            if(selectionType.employeeSelection === "Engineer") {
+
+                engineerCreation()
+
+            } else if (selectionType.employeeSelection === "Intern") {
+
+                internCreation()
+                
+            } else {
+                const html = render(employees);
+
+                fs.writeFile(outputPath, html, ett => {
+
+                    if(err) {
+
+                        return console.log(err);
+                    };
+
+                });
+            }
+        });
+};
+
     // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
