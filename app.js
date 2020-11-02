@@ -8,7 +8,7 @@ const path = require("path");
 const fs = require("fs");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
-const outputPath = path.join(OUTPUT_DIR, "team.html");
+const outputPath = path.join(OUTPUT_DIR, "main.html");
 
 const render = require("./lib/htmlRenderer");
 
@@ -157,11 +157,11 @@ function employeeCreation() {
             } else if (selectionType.employeeSelection === "Intern") {
 
                 internCreation()
-                
+
             } else {
                 const html = render(employees);
 
-                fs.writeFile(outputPath, html, ett => {
+                fs.writeFile(outputPath, html, err => {
 
                     if(err) {
 
